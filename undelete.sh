@@ -13,24 +13,24 @@ then
 fi
 
 # Papierkorb existiert?
-if [ ! -e $TRASHDIR ]
+if [ ! -e "$TRASHDIR" ]
 then
     echo "Papierkorbverzeichnis nicht gefunden"
     exit 1
 fi
 
 # Logdatei existiert?
-if [ ! -e $TRASHLOG ]
+if [ ! -e "$TRASHLOG" ]
 then
     echo "Papierkorb-Logdatei nicht gefunden"
     exit 1
 fi
 
 # Iteration über Parameterliste
-for FILE in $@
+for FILE in "$@"
 do
     # Zeile in Logdatei finden
-    LINE=$(grep $FILE! $TRASHLOG)
+    LINE=$(grep "$FILE"! "$TRASHLOG")
 
     if [ $? ]
     then
@@ -45,5 +45,4 @@ do
 	echo "$FILE nicht gefunden"
     fi
     
-    #echo $LINE
 done

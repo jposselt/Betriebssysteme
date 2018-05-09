@@ -16,21 +16,21 @@ then
 fi
 
 # Erzeuge Papierkorb, falls nicht vorhanden
-if [ ! -e $TRASHDIR ]
+if [ ! -e "$TRASHDIR" ]
 then
-    mkdir $TRASHDIR
+    mkdir "$TRASHDIR"
 fi
 
 # Erzeuge Log-Datei, falls nicht vorhanden
-if [ ! -e $TRASHLOG ]
+if [ ! -e "$TRASHLOG" ]
 then
-    touch $TRASHLOG
+    touch "$TRASHLOG"
 fi
 
 # Iteration über Parameterliste
-for FILE in $@
+for FILE in "$@"
 do
-    if [ -e $FILE ]
+    if [ -e "$FILE" ]
     then
 	# Dateihandle anlegen
 	HANDLE=$(date '+%y%m%d%H%M%S')_$$.dat
@@ -39,7 +39,7 @@ do
 	cp "$FILE" "$TRASHDIR/$HANDLE"
 
 	# Eintrag zur Logdatei hinzufügen
-	echo $HANDLE! $(realpath -s $FILE) >> $TRASHLOG
+	echo $HANDLE! $(realpath -s "$FILE") >> "$TRASHLOG"
 
 	# Ausgabe für Benutzer
 	echo "$(realpath -s $FILE): $HANDLE"
