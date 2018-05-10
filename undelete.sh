@@ -34,13 +34,19 @@ do
 
     if [ $? ]
     then
-	# Ursprungspfad holen und prüfen
-	# Befehl basename
-	echo $LINE
+	# Ursprungspfad holen
+	SRCPATH="$(echo $LINE | cut -d'!' -f2)"	
+	
 	# Datei wiederherstellen
-
-	# Zeile aus Logdatei entfernen
-	# sed- i ...
+	if mv $TRASHDIR/$FILE $SRCPATH
+	then	
+		echo "Platzhalter"
+		# Zeile aus Logdatei entfernen
+		
+	else 
+		echo "Fehler beim wiederherstellen. Ursprungspfad nicht vorhaden"
+	fi
+	
     else
 	echo "$FILE nicht gefunden"
     fi
