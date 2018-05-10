@@ -37,7 +37,7 @@ do
 
 	# Datei verschieben (Copy zum Testen)
 	
-	if mv "$FILE" "$TRASHDIR/$HANDLE"
+	if mv "$FILE" "$TRASHDIR/$HANDLE" 2>/dev/null
 	then	
 		# Eintrag zur Logdatei hinzufügen
 		echo $HANDLE! $(realpath -s "$FILE") >> "$TRASHLOG"
