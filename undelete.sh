@@ -50,7 +50,7 @@ do
 	fi
 	
     else
-	echo "Fehler beim Auslesen"
+	echo "Datei nicht vorhanden"
     fi
     
 done
