@@ -30,13 +30,13 @@ fi
 for FILE in "$@"
 do
     # Zeile in Logdatei finden
-    LINE=$(grep "$FILE"! "$TRASHLOG")
+    LINE=$(grep ^"$FILE"! "$TRASHLOG")
 
     if [ $? ]
     then
 	# Ursprungspfad holen und prüfen
 	# Befehl basename
-
+	echo $LINE
 	# Datei wiederherstellen
 
 	# Zeile aus Logdatei entfernen
