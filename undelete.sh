@@ -31,24 +31,25 @@ for FILE in "$@"
 do
     # Zeile in Logdatei finden
     LINE=$(grep ^"$FILE"! "$TRASHLOG")
-
+	
     if [ $? ]
     then
 	# Ursprungspfad holen
 	SRCPATH="$(echo $LINE | cut -d'!' -f2)"	
 	
-	# Datei wiederherstellen
-	if mv $TRASHDIR/$FILE $SRCPATH
+	# Datei wiederherstellen 	for silent mv
+	if mv $TRASHDIR/$FILE $SRCPATH 2>/dev/null
 	then	
-		echo "Platzhalter"
 		# Zeile aus Logdatei entfernen
+		grep -v  $FILE $TRASHLOG > tempdatei
+		mv tempdatei $TRASHLOG
 		
 	else 
-		echo "Fehler beim wiederherstellen. Ursprungspfad nicht vorhaden"
+		echo "Fehler beim wiederherstellen."
 	fi
 	
     else
-	echo "$FILE nicht gefunden"
+	echo "Fehler beim Auslesen"
     fi
     
 done
