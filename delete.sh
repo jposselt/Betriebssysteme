@@ -36,16 +36,18 @@ do
 	HANDLE=$(date '+%y%m%d%H%M%S')_$$.dat
 
 	# Datei verschieben (Copy zum Testen)
-	cp "$FILE" "$TRASHDIR/$HANDLE"
+	
+	if mv "$FILE" "$TRASHDIR/$HANDLE"
+	then	
+		# Eintrag zur Logdatei hinzufügen
+		echo $HANDLE! $(realpath -s "$FILE") >> "$TRASHLOG"
 
-	# Eintrag zur Logdatei hinzufügen
-	echo $HANDLE! $(realpath -s "$FILE") >> "$TRASHLOG"
-
-	# Ausgabe für Benutzer
-	echo "$(realpath -s $FILE): $HANDLE"
+		# Ausgabe für Benutzer
+		echo "$(realpath -s $FILE): $HANDLE"
+	else 
+	echo Fehler beim Löschvorgang
+	fi
     else
 	echo "$FILE existiert nicht"
     fi
 done
-
-
