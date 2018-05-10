@@ -34,16 +34,15 @@ do
     then
 	# Dateihandle anlegen
 	HANDLE=$(date '+%y%m%d%H%M%S')_$$.dat
-
-	# Datei verschieben (Copy zum Testen)
 	
+	# Datei verschieben
 	if mv "$FILE" "$TRASHDIR/$HANDLE" 2>/dev/null
 	then	
 		# Eintrag zur Logdatei hinzufügen
 		echo $HANDLE! $(realpath -s "$FILE") >> "$TRASHLOG"
 
 		# Ausgabe für Benutzer
-		echo "$(realpath -s $FILE): $HANDLE"
+		echo $(realpath -s "$FILE"): "$HANDLE"
 	else 
 	echo Fehler beim Löschvorgang
 	fi
