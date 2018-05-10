@@ -38,7 +38,7 @@ do
 	SRCPATH=$(sed -n -e "s/^""$FILE""! //p" $TRASHLOG)
 	
 	# Datei wiederherstellen 	for silent mv
-	mv "$TRASHDIR/$FILE" "$SRCPATH" #2>/dev/null
+	mv "$TRASHDIR/$FILE" "$SRCPATH" 2>/dev/null
 	if [ "$?" -eq "0" ]
 	then	
 		# Zeile aus Logdatei entfernen
