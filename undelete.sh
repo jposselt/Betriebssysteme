@@ -32,17 +32,18 @@ do
     # Zeile in Logdatei finden
     LINE=$(grep ^"$FILE"! "$TRASHLOG")
 	
-    if [ $? ]
+    if [ "$?" -eq "0" ]
     then
 	# Ursprungspfad holen
-	SRCPATH="$(echo $LINE | cut -d'!' -f2)"	
+	SRCPATH=$(sed -n -e "s/^""$FILE""! //p" $TRASHLOG)
 	
 	# Datei wiederherstellen 	for silent mv
-	if mv $TRASHDIR/$FILE $SRCPATH 2>/dev/null
+	mv "$TRASHDIR/$FILE" "$SRCPATH" #2>/dev/null
+	if [ "$?" -eq "0" ]
 	then	
 		# Zeile aus Logdatei entfernen
-		grep -v  $FILE $TRASHLOG > tempdatei
-		mv tempdatei $TRASHLOG
+		grep -v  "$FILE" "$TRASHLOG" > tempdatei
+		mv tempdatei "$TRASHLOG"
 		
 	else 
 		echo "Fehler beim wiederherstellen."
