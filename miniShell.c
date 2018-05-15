@@ -1,66 +1,49 @@
 // Compile gcc -o minishell miniShell.c
 
 // Includes
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "input.h"
+#include "execution.h"
+#include "builtin.h"
 
-// Zeile einlesen
-char *readLine(void)
-{
-  char *line = NULL;
-  ssize_t bufsize = 0; // getline alloziert Buffer
-  getline(&line, &bufsize, stdin);
-  return line;
-}
-
-// Parsen der Argumente
-/*
-char **parseLine(char *line)
-{
-  
-}
-*/
-
-// Kommando ausführen
-/*
-int runCommand(char **args)
-{
-  
-}
-*/
-
-// Prompt anzeigen
-void printPrompt(void)
+/**
+ * Prompt anzeigen
+ */
+void print_prompt(void)
 {
   printf("%s:%s$ ", getlogin(), getcwd(0,0));
 }
 
-// Hauptschleif zur Kommandoausführung
-void shellLoop(void)
+/**
+ * Hauptschleife
+ */
+void shell_loop(void)
 {
   char *line;
   char **args;
   int status;
 
   do {
-    printPrompt();
-    line = readLine();
-
-    // ...
+    print_prompt();
+    line = read_line();
+    args = parse_line(line);
+    status = exec_cmd(args);
 
     free(line);
     free(args);  
   } while (status);
 }
 
-// Main
+/**
+ * Main
+ * @param argc
+ * @param argv
+ * @return EXIT_SUCCESS oder EXIT_FAILURE
+ */
 int main( int argc, const char* argv[] )
 {
 
   // Hauptschleife
-  shellLoop();
+  shell_loop();
   
   return EXIT_SUCCESS;
 }
