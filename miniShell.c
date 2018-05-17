@@ -8,29 +8,28 @@
 /**
  * Prompt anzeigen
  */
-void print_prompt(void)
-{
-  printf("%s:%s$ ", getlogin(), getcwd(0,0));
+void print_prompt(void) {
+    printf("%s:%s$ ", getlogin(), getcwd(0, 0));
 }
 
 /**
  * Hauptschleife
  */
-void shell_loop(void)
-{
-  char *line;
-  char **args;
-  int status;
+void shell_loop(void) {
+    char *line;
+    char **args;
+    int status;
 
-  do {
-    print_prompt();
-    line = read_line();
-    args = parse_line(line);
-    status = exec_cmd(args);
+    do {
+        print_prompt();
+        line = read_line();
+        args = parse_line(line);
+        status = exec_cmd(args);
 
-    free(line);
-    free(args);  
-  } while (status);
+        // Speicher freigeben
+        free(line);
+        free(args);
+    } while (status);
 }
 
 /**
@@ -39,11 +38,10 @@ void shell_loop(void)
  * @param argv
  * @return EXIT_SUCCESS oder EXIT_FAILURE
  */
-int main( int argc, const char* argv[] )
-{
+int main(int argc, const char *argv[]) {
 
-  // Hauptschleife
-  shell_loop();
-  
-  return EXIT_SUCCESS;
+    // Hauptschleife
+    shell_loop();
+
+    return EXIT_SUCCESS;
 }

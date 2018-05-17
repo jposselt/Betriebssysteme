@@ -11,8 +11,7 @@
  * Einlesen einer Zeile von der Standardeingabe
  * @return Eingelesene Zeile (Freigabe durch Benutzer)
  */
-char *read_line(void)
-{
+char *read_line(void) {
     char *line = NULL;
     ssize_t bufsize = 0; // getline alloziert Buffer
     getline(&line, &bufsize, stdin);
@@ -24,11 +23,10 @@ char *read_line(void)
  * @param line Befehlsstring (Kommando + Argumente)
  * @return Array mit dem Befehl und den einzelnen Argumenten (Freigabe durch Benutzer)
  */
-char **parse_line(char *line)
-{
+char **parse_line(char *line) {
     int bufsize = TOKEN_BUFSIZE;
     int position = 0;
-    char **tokens = malloc(bufsize * sizeof(char*));
+    char **tokens = malloc(bufsize * sizeof(char *));
     char *token;
 
     if (!tokens) {
@@ -43,7 +41,7 @@ char **parse_line(char *line)
 
         if (position >= bufsize) {
             bufsize += TOKEN_BUFSIZE;
-            tokens = realloc(tokens, bufsize * sizeof(char*));
+            tokens = realloc(tokens, bufsize * sizeof(char *));
             if (!tokens) {
                 fprintf(stderr, "minishell: allocation error\n");
                 exit(EXIT_FAILURE);

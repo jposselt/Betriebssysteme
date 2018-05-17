@@ -4,12 +4,14 @@
 
 #include "builtin.h"
 
+// Liste der Builtin-Kommandos
 char *builtin_str[] = {
         "exit",
         "cd",
         "set"
 };
 
+// Zeigerarray auf Builtin-Kommandos
 int (*builtin_func[])(char **) = {
         &builtin_exit,
         &builtin_cd,
@@ -29,8 +31,7 @@ int num_builtins() {
  * @param args ohne Funktion
  * @return 0
  */
-int builtin_exit(char **args)
-{
+int builtin_exit(char **args) {
     return 0;
 }
 
@@ -39,8 +40,7 @@ int builtin_exit(char **args)
  * @param args Array (cd-Kommando + Argumente); nur das erste Argument wird berücksichtigt
  * @return 1
  */
-int builtin_cd(char **args)
-{
+int builtin_cd(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "minishell: no argument for \"cd\"\n");
     } else {
@@ -56,8 +56,7 @@ int builtin_cd(char **args)
  * @param args Array (set-Kommando + Argumente); nur das erste Argument wird berücksichtigt
  * @return 1
  */
-int builtin_set(char **args)
-{
+int builtin_set(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "minishell: no argument for \"set\"\n");
     } else {

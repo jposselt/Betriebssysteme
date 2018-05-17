@@ -10,6 +10,7 @@
 #include <string.h>
 
 char *read_line(void);
+
 char **parse_line(char *line);
 
 #endif //BETRIEBSSYSTEME_INPUT_H
