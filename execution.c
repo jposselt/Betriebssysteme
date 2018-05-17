@@ -7,26 +7,31 @@
 /**
  * Kommando ausführen
  * @param args
- * @return
+ * @return 1
  */
-int exec_cmd(char **args)
-{
+int exec_cmd(char **args) {
     if (args[0] == NULL) {
         // kein Kommando
         return 1;
     }
 
-    //...
-    return 1;
+    // Builtin Kommando
+    for (int i = 0; i < num_builtins(); i++) {
+        if (strcmp(args[0], builtin_str[i]) == 0) {
+            return (*builtin_func[i])(args);
+        }
+    }
+
+    // alle anderen Kommandos
+    return fork_shell(args);
 }
 
 /**
  *
  * @param args
- * @return
+ * @return 1
  */
-int fork_shell(char **args)
-{
+int fork_shell(char **args) {
     pid_t pid;
     int status;
 
