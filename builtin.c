@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <wordexp.h>
 
 #include "builtin.h"
@@ -72,9 +73,22 @@ int builtin_set(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "minishell: no argument for \"set\"\n");
     } else {
-        if (putenv(args[1]) != 0) {
+        // Umgebungsvariablen expandieren
+        wordexp_t p;
+        wordexp( args[1], &p, 0 );
+
+        // Dupliziert String
+        // Der zurückgegebene Zeiger muss an free() übergeben werden um Speicherlöcher zu vermeiden. Das sollte aber
+        // erst passieren, wenn die Umgebungsvariable gelöscht oder geändert wird.
+        char *var = strdup(p.we_wordv[0]);
+
+        if (putenv(var) != 0) {
             perror("minishell");
         }
+
+        // Speicher freigeben
+        wordfree( &p );
     }
+
     return 1;
 }
