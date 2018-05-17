@@ -5,12 +5,6 @@
 #ifndef BETRIEBSSYSTEME_EXECUTION_H
 #define BETRIEBSSYSTEME_EXECUTION_H
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/wait.h>
-
 #include "builtin.h"
 
 int exec_cmd(char **args);

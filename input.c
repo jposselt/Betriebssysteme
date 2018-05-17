@@ -2,6 +2,10 @@
 // Created by jonas on 15.05.18.
 //
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "input.h"
 
 #define TOKEN_BUFSIZE 64

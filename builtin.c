@@ -1,6 +1,9 @@
 //
 // Created by jonas on 15.05.18.
 //
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "builtin.h"
 

@@ -1,6 +1,9 @@
 // Compile gcc -o minishell miniShell.c
 
-// Includes
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "input.h"
 #include "execution.h"
 #include "builtin.h"

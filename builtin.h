@@ -3,11 +3,6 @@
 //
 
 #ifndef BETRIEBSSYSTEME_BUILTIN_H
-#define BETRIEBSSYSTEME_BUILTIN_H
-
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 int builtin_exit(char **args);
 
