@@ -18,14 +18,12 @@
  */
 int exec_cmd(char **args) {
     int status = 1;
+    wordexp_t result;
 
     if (args[0] == NULL) {
         // kein Kommando
         return status;
     }
-
-    // Umgebungsvariablen auflösen
-    wordexp_t result;
 
     // Expandiere Kommando
     switch (wordexp (args[0], &result, 0))
