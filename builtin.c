@@ -69,21 +69,21 @@ int builtin_set(char **args) {
         fprintf(stderr, "minishell: no argument for \"set\"\n");
     } else {
         //meherere Definitionen möglich
-        for(int i = 1; args[i] != NULL; i++) {
+        for (int i = 1; args[i] != NULL; i++) {
 
             // Dupliziere Definition (nur zur Sicherheit)
             char *definition = strdup(args[i]);
-            if(!definition) {
+            if (!definition) {
                 fprintf(stderr, "minishell: allocation error\n");
                 exit(EXIT_FAILURE);
             }
 
             // Extrahiere Namen und Wert der Umgebungsvariablen
-            char *name = strtok(definition,ENVAR_DELIM);
-            char *value = strtok(NULL,ENVAR_REST);
+            char *name = strtok(definition, ENVAR_DELIM);
+            char *value = strtok(NULL, ENVAR_REST);
 
             // Variable setzen
-            if(setenv(name,value,1)) {
+            if (setenv(name, value, 1)) {
                 perror("minishell");
             }
 

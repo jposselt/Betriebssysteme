@@ -26,9 +26,8 @@ int exec_cmd(char **args) {
     }
 
     // Expandiere Kommando
-    switch (wordexp (args[0], &result, 0))
-    {
-        case 0:			            /* Erfolgreich  */
+    switch (wordexp(args[0], &result, 0)) {
+        case 0:                     /* Erfolgreich  */
             break;
         case WRDE_NOSPACE:          /* Nicht genug Speicher */
             perror("minishell");
@@ -39,12 +38,10 @@ int exec_cmd(char **args) {
     }
 
     // Expandiere Argumente
-    for (int i = 1; args[i] != NULL; i++)
-    {
-        if (wordexp (args[i], &result, WRDE_APPEND))
-        {
+    for (int i = 1; args[i] != NULL; i++) {
+        if (wordexp(args[i], &result, WRDE_APPEND)) {
             perror("minishell");
-            wordfree (&result);
+            wordfree(&result);
             return status;
         }
     }
