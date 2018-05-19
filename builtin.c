@@ -5,9 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wordexp.h>
 
 #include "builtin.h"
+
+// Delimiter bei der Definition von Umgebungsvariablen
+#define ENVAR_DELIM "="
+#define ENVAR_REST ""
 
 // Liste der Builtin-Kommandos
 char *builtin_str[] = {
@@ -49,17 +52,9 @@ int builtin_cd(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "minishell: no argument for \"cd\"\n");
     } else {
-        // Umgebungsvariablen expandieren
-        wordexp_t p;
-        wordexp( args[1], &p, 0 );
-
-        // Verzeichnis wechseln
-        if (chdir(p.we_wordv[0]) != 0) {
+        if (chdir(args[1]) != 0) {
             perror("minishell");
         }
-
-        // Speicher freigeben
-        wordfree( &p );
     }
     return 1;
 }
@@ -73,21 +68,28 @@ int builtin_set(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "minishell: no argument for \"set\"\n");
     } else {
-        // Umgebungsvariablen expandieren
-        wordexp_t p;
-        wordexp( args[1], &p, 0 );
+        //meherere Definitionen möglich
+        for(int i = 1; args[i] != NULL; i++) {
 
-        // Dupliziert String
-        // Der zurückgegebene Zeiger muss an free() übergeben werden um Speicherlöcher zu vermeiden. Das sollte aber
-        // erst passieren, wenn die Umgebungsvariable gelöscht oder geändert wird.
-        char *var = strdup(p.we_wordv[0]);
+            // Dupliziere Definition (nur zur Sicherheit)
+            char *definition = strdup(args[i]);
+            if(!definition) {
+                fprintf(stderr, "minishell: allocation error\n");
+                exit(EXIT_FAILURE);
+            }
 
-        if (putenv(var) != 0) {
-            perror("minishell");
+            // Extrahiere Namen und Wert der Umgebungsvariablen
+            char *name = strtok(definition,ENVAR_DELIM);
+            char *value = strtok(NULL,ENVAR_REST);
+
+            // Variable setzen
+            if(setenv(name,value,1)) {
+                perror("minishell");
+            }
+
+            // Speicher freigeben
+            free(definition);
         }
-
-        // Speicher freigeben
-        wordfree( &p );
     }
 
     return 1;
