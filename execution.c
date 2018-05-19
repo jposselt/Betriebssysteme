@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <wordexp.h>
 
 #include "execution.h"
 
@@ -16,20 +17,53 @@
  * @return 1
  */
 int exec_cmd(char **args) {
+    int status = 1;
+
     if (args[0] == NULL) {
         // kein Kommando
-        return 1;
+        return status;
+    }
+
+    // Umgebungsvariablen auflösen
+    wordexp_t result;
+
+    // Expandiere Kommando
+    switch (wordexp (args[0], &result, 0))
+    {
+        case 0:			            /* Erfolgreich  */
+            break;
+        case WRDE_NOSPACE:          /* Nicht genug Speicher */
+            perror("minishell");
+            exit(EXIT_FAILURE);
+        default:                    /* Anderer Fehler  */
+            perror("minishell");
+            return status;
+    }
+
+    // Expandiere Argumente
+    for (int i = 1; args[i] != NULL; i++)
+    {
+        if (wordexp (args[i], &result, WRDE_APPEND))
+        {
+            perror("minishell");
+            wordfree (&result);
+            return status;
+        }
     }
 
     // Builtin Kommando
     for (int i = 0; i < num_builtins(); i++) {
-        if (strcmp(args[0], builtin_str[i]) == 0) {
-            return (*builtin_func[i])(args);
+        if (strcmp(result.we_wordv[0], builtin_str[i]) == 0) {
+            status = (*builtin_func[i])(result.we_wordv);
+            wordfree(&result);
+            return status;
         }
     }
 
     // alle anderen Kommandos
-    return fork_shell(args);
+    status = fork_shell(result.we_wordv);
+    wordfree(&result);
+    return status;
 }
 
 /**
