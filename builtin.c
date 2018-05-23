@@ -68,7 +68,7 @@ int builtin_set(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "minishell: no argument for \"set\"\n");
     } else {
-        //meherere Definitionen möglich
+        //mehrere Definitionen möglich
         for (int i = 1; args[i] != NULL; i++) {
 
             // Dupliziere Definition (nur zur Sicherheit)
