@@ -18,7 +18,10 @@
 char *read_line(void) {
     char *line = NULL;
     ssize_t bufsize = 0; // getline alloziert Buffer
-    getline(&line, &bufsize, stdin);
+    if(getline(&line, &bufsize, stdin) == -1) {
+        perror("minishell");
+        exit(EXIT_FAILURE);
+    }
     return line;
 }
 
