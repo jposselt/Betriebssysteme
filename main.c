@@ -63,17 +63,14 @@ int compareProcessByTimeAndPrio(processNode *process1, processNode *process2, vo
 
 void firstComeFirstServed(processList *list) {
 	processNode *node = list->head;
-    float thisTime = 0;
     float totalTime = 0;
-    int listCount = list->count;
     while (node != NULL) {
-
+	
 		//Entspricht 5*Atime+4*Btime...
-        thisTime = listCount * node->time;
-        totalTime += thisTime;
-
-        listCount--;
-		printf(" Prozess %s wurde abgearbeitet, Aktuelle Zeit: %.3f s \n", node->name,totalTime)
+        totalTime += node->time;
+	//Simulation des abarbeitens    
+        node->time -=node->time;
+	printf(" Prozess %s wurde abgearbeitet, Aktuelle Zeit: %.3f s \n", node->name,totalTime)
         node = node->next;
     }
     float timeAverage = timeTotal / list->count;
