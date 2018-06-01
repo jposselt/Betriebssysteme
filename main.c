@@ -121,9 +121,7 @@ void constantRoundRobin(processList *list) {
 				node = node->next;
 			}
 		}
-		else {
-			totalTime += previousTime;
-		}
+		
 		totalTime += previousTime;
 		//Löschen eines abgearbeiteten Knoten
 		List_remove(list, list->head);
@@ -164,9 +162,7 @@ void priorityRoundRobin(processList *list) {
 				node = node->next;
 			}
 		}
-		else {
-			totalTime += previousTime;
-		}
+		
 		totalTime += previousTime;
 		List_remove(list, node);
 	}
