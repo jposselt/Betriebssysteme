@@ -95,6 +95,7 @@ void prioritySchedule(processList *list) {
 void constantRoundRobin(processList *list) {
 	//Für später
 	int count = list->count;
+	float previousTime = 0;
 	//Gesamtarbeitszeit    
 	float totalTime = 0;
 
@@ -102,6 +103,7 @@ void constantRoundRobin(processList *list) {
 	List_sort(&*list, (ListNodeCompareFunction)compareProcessByTime, NULL);
 	processNode *node;
 	while (!List_isEmpty(list) {
+	
 		node = list->head;
 		if (node->time > 0) {
 			//Die Zeit die abgezogen wird
@@ -111,10 +113,11 @@ void constantRoundRobin(processList *list) {
 			while (node != NULL) {
 				printf("  Es wurde %.3fs an %s gearbeitet.\n", timeToSpent, node->name);
 				node->time -= timeToSpent;
-				totalTime += timeToSpent;
+				previousTime +=timeToSpent;
 				if (node->time <= 0) {
 					printf("%s wurde abgearbeitet.\n", node->name);
 				}
+				totalTime += previousTime;
 				node = node->next;
 			}
 		}
@@ -129,12 +132,14 @@ void priorityRoundRobin(processList *list) {
 	//Für Später
 	int count = list->count;
 	float totalTime = 0;
+	float previousTime = 0;
 	//Sortieren nach Zeit/Priorität
 	List_sort(&*list, (ListNodeCompareFunction)compareProcessByTimeAndPrio, NULL);
 	processNode *node;
 
 
 	while (!List_isEmpty(list)) {
+		
 		node = list->head;
 		if (node->time > 0) {
 			//Wie oft muss der schnellste Prozess ausgeführt werden um abgearbeitet zu werden
@@ -147,10 +152,11 @@ void priorityRoundRobin(processList *list) {
 				float timeSpent = timeToSpent * node->priority;
 				printf("  Es wurde %.3fs an %s gearbeitet.\n", timeSpent, node->name);
 				node->time -= timeSpent;
-				totalTime += timeSpent;
+				previousTime += timeSpent;
 				if (node->time <= 0) {
 					printf("%s wurde abgearbeitet.\n", node->name);
 				}
+				totalTime += previousTime;
 				node = node->next;
 			}
 		}
