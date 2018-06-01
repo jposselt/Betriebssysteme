@@ -117,13 +117,14 @@ void constantRoundRobin(processList *list) {
 				if (node->time <= 0) {
 					printf("%s wurde abgearbeitet.\n", node->name);
 				}
-				totalTime += previousTime;
+				
 				node = node->next;
 			}
 		}
 		else {
 			totalTime += previousTime;
 		}
+		totalTime += previousTime;
 		//Löschen eines abgearbeiteten Knoten
 		List_remove(list, list->head);
 	}
@@ -159,13 +160,14 @@ void priorityRoundRobin(processList *list) {
 				if (node->time <= 0) {
 					printf("%s wurde abgearbeitet.\n", node->name);
 				}
-				totalTime += previousTime;
+				
 				node = node->next;
 			}
 		}
 		else {
 			totalTime += previousTime;
 		}
+		totalTime += previousTime;
 		List_remove(list, node);
 	}
 	float averageTime = totalTime / count;
