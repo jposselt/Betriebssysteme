@@ -4,7 +4,7 @@
 
 // Node
 typedef struct processNode {
-	//Zeigt auf den n‰chsten Knoten
+	//Zeigt auf den n√§chsten Knoten
 	LIST_NODE_HEADER(struct processNode);
 	char name[100];
 	float time;
@@ -17,7 +17,7 @@ typedef struct {
 	LIST_HEADER(processNode);
 } processList;
 
-//Erstellt neunen Knoten und f¸gt ihn der Liste hinzu
+//Erstellt neunen Knoten und f√ºgt ihn der Liste hinzu
 void addProcess(processList *list, char name[100], int time, int prio) {
 	processNode *node = LIST_NEW_NODE(node);
 	strcpy(node->name, name);
@@ -26,7 +26,7 @@ void addProcess(processList *list, char name[100], int time, int prio) {
 	List_append(&*list, node);
 }
 
-//Vergleicht zwei Knoten mit ihrerer Priorit‰t
+//Vergleicht zwei Knoten mit ihrerer Priorit√§t
 int compareProcessByPrio(processNode *process1, processNode *process2, void *dummy) {
 	int cmp = process1->priority - process2->priority;
 	if (cmp == 0)
@@ -48,7 +48,7 @@ int compareProcessByTime(processNode *process1, processNode *process2, void *dum
 	else
 		return -1;
 }
-//Vergleicht zwie Knoten mit ihrer Zeit/Priorit‰t
+//Vergleicht zwie Knoten mit ihrer Zeit/Priorit√§t
 int compareProcessByTimeAndPrio(processNode *process1, processNode *process2, void *dummy) {
 	float cmp = (process1->time / process1->priority) - (process2->time / process2->priority);
 	if (cmp == 0)
@@ -87,13 +87,13 @@ void shortesJobFirst(processList *list) {
 }
 
 void prioritySchedule(processList *list) {
-	//Sortiere nach Priorit‰t
+	//Sortiere nach Priorit√§t
 	List_sort(&*list, (ListNodeCompareFunction)compareProcessByPrio, NULL);
 	firstComeFirstServed(list);
 }
 
 void constantRoundRobin(processList *list) {
-	//F¸r sp‰ter
+	//F√ºr sp√§ter
 	int count = list->count;
 	float previousTime = 0;
 	//Gesamtarbeitszeit    
@@ -121,7 +121,10 @@ void constantRoundRobin(processList *list) {
 				node = node->next;
 			}
 		}
-		//Lˆschen eines abgearbeiteten Knoten
+		else {
+			totalTime += previousTime;
+		}
+		//L√∂schen eines abgearbeiteten Knoten
 		List_remove(list, list->head);
 	}
 	float averageTime = totalTime / count;
@@ -129,11 +132,11 @@ void constantRoundRobin(processList *list) {
 }
 
 void priorityRoundRobin(processList *list) {
-	//F¸r Sp‰ter
+	//F√ºr Sp√§ter
 	int count = list->count;
 	float totalTime = 0;
 	float previousTime = 0;
-	//Sortieren nach Zeit/Priorit‰t
+	//Sortieren nach Zeit/Priorit√§t
 	List_sort(&*list, (ListNodeCompareFunction)compareProcessByTimeAndPrio, NULL);
 	processNode *node;
 
@@ -142,13 +145,13 @@ void priorityRoundRobin(processList *list) {
 		
 		node = list->head;
 		if (node->time > 0) {
-			//Wie oft muss der schnellste Prozess ausgef¸hrt werden um abgearbeitet zu werden
+			//Wie oft muss der schnellste Prozess ausgef√ºhrt werden um abgearbeitet zu werden
 			float timeToSpent = node->time / node->priority
 
 
 				printf(" Es wird an den Prozessen zu folgenden Anteilen gearbeitet:\n");
 			while (node != NULL) {
-				//Die tats‰chliche Arbeitszeit 
+				//Die tats√§chliche Arbeitszeit 
 				float timeSpent = timeToSpent * node->priority;
 				printf("  Es wurde %.3fs an %s gearbeitet.\n", timeSpent, node->name);
 				node->time -= timeSpent;
@@ -159,6 +162,9 @@ void priorityRoundRobin(processList *list) {
 				totalTime += previousTime;
 				node = node->next;
 			}
+		}
+		else {
+			totalTime += previousTime;
 		}
 		List_remove(list, node);
 	}
@@ -195,7 +201,7 @@ int main() {
 	addProcess(&list, "E", 18, 3);
 
 
-	printf("\nPriorit‰ten gesteuert:\n");
+	printf("\nPriorit√§ten gesteuert:\n");
 	prioritySchedule(&list);
 
 	addProcess(&list, "A", 30, 2);
@@ -213,7 +219,7 @@ int main() {
 	addProcess(&list, "D", 28, 4);
 	addProcess(&list, "E", 18, 3);
 
-	printf("\n Priorit‰ten Round Robin:\n");
+	printf("\n Priorit√§ten Round Robin:\n");
 	priorityRoundRobin(&list);
 
 	return 0;
