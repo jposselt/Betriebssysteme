@@ -66,7 +66,7 @@ void firstComeFirstServed(processList *list) {
     float totalTime = 0;
     while (node != NULL) {
 	
-		//Entspricht 5*Atime+4*Btime...
+	
         totalTime += node->time;
 	//Simulation des abarbeitens    
         node->time -=node->time;
