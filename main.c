@@ -33,9 +33,9 @@ int compareProcessByPrio(processNode *process1, processNode *process2, void *dum
         return 0;
         //Wenn Prozess1 kleiner als Prozess2 ist, steht Prozess2 vorne
     else if (cmp < 0)
-        return -1;
-    else
         return 1;
+    else
+        return -1;
 }
 
 //Vergleicht zwei Knoten mit ihrere Prozesszeit
@@ -45,9 +45,9 @@ int compareProcessByTime(processNode *process1, processNode *process2, void *dum
         return 0;
         //Wenn Prozess1 kleiner als Prozess2 ist, steht Prozess1 vorne
     else if (cmp < 0)
-        return 1;
-    else
         return -1;
+    else
+        return 1;
 }
 
 //Vergleicht zwie Knoten mit ihrer Zeit/Priorität
@@ -166,7 +166,7 @@ void priorityRoundRobin(processList *list) {
         }
 
         totalTime += previousTime;
-        List_remove(list, node);
+        List_remove(list, list->head);
     }
     float averageTime = totalTime / count;
     printf(" Mittlere Verweilzeit: %.3f s\n", averageTime);
