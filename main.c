@@ -11,7 +11,7 @@ int main( int argc, char *argv[] ) {
         return EXIT_SUCCESS;
     }
 
-    DIR* dir = opendir("mydir");
+    DIR* dir = opendir(argv[1]);
     if (dir)
     {
         /* Verzeichnis existiert */
