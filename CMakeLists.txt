@@ -3,4 +3,4 @@ project(Synchronisation C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(synchronize main.c)
+add_executable(synchronize main.c queue.h miniz.h miniz.c tools.c tools.h)
