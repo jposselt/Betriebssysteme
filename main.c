@@ -39,10 +39,15 @@ int main( int argc, char *argv[] ) {
         pthread_t consumers[NTHREADS];
         for (int i = 0; i < NTHREADS; i++) {
             comprThreadArg *arg = malloc(sizeof(comprThreadArg));
-            arg->id = i+1;
-            arg->mutexQueue = mutexQueue;
-            if (pthread_create(&(consumers[i]), NULL, compressionThread, arg)) {
-                perror("Fehler beim Starten der Verbraucher-Threads: ");
+            if(arg) {
+                arg->id = i+1;
+                arg->mutexQueue = mutexQueue;
+                if (pthread_create(&(consumers[i]), NULL, compressionThread, arg)) {
+                    perror("Fehler beim Starten der Verbraucher-Threads: ");
+                }
+            } else {
+                printf("Fehler beim Erzeugen eines Commpression-Thread Arguments\n");
+                return EXIT_FAILURE;
             }
         }
 
