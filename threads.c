@@ -16,7 +16,7 @@ const char comprExt[] = "compr";
  * @param job
  */
 void deleteJob(Job *job) {
-    //free(job->path);
+    free(job->path);
     free(job->content);
     free(job);
 }
@@ -90,7 +90,7 @@ void *readerThread(void *arg) {
                 printf("readerThread: Fehler beim Speicherallozieren\n");
                 exit(EXIT_FAILURE);
             }
-            job->path = fullPath;
+            job->path = strdup(fullPath);
             job->content = get_file_content(fullPath);
 
             // Sperre anfordern
