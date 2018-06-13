@@ -121,6 +121,26 @@ void *readerThread(void *arg) {
         free(fullPath);
     }
 
+    // Sperre anfordern
+    if (pthread_mutex_lock(mutexQueue->mutex)) {
+        perror("Fehler beim Sperren des Mutex: ");
+        return NULL;
+    }
+
+    // Marker, dass Produzent fertig ist
+    mutexQueue->running = 0;
+
+    // Signal senden
+    if (pthread_cond_signal(mutexQueue->notEmpty)) {
+        perror("Fehler beim Senden eines Signals: ");
+    }
+
+    // Sperre lösen
+    if (pthread_mutex_unlock(mutexQueue->mutex)) {
+        perror("Fehler beim Entsperren des Mutex: ");
+        return NULL;
+    }
+
     printf("Reader thread beendet.\n");
 
     return NULL;
@@ -161,11 +181,11 @@ void *compressionThread(void *arg) {
         job = (Job *) queue_head(mutexQueue->queue);
         queue_delete(mutexQueue->queue);
 
-        //
         if (queue_empty(mutexQueue->queue)) { // Queue leer
             mutexQueue->empty = 1;
             if ( !(mutexQueue->running) ) {   // Erzeuger beendet
                 loop = 0;
+                pthread_cond_signal(mutexQueue->notEmpty);
             }
         } else {                              // Noch Jobs in der Queue
             mutexQueue->empty = 0;
