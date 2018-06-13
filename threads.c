@@ -185,6 +185,7 @@ void *compressionThread(void *arg) {
             mutexQueue->empty = 1;
             if ( !(mutexQueue->running) ) {   // Erzeuger beendet
                 loop = 0;
+                mutexQueue->empty = 0;
                 pthread_cond_signal(mutexQueue->notEmpty);
             }
         } else {                              // Noch Jobs in der Queue
