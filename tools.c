@@ -56,3 +56,16 @@ const char *get_file_content(const char *filename) {
     /* Rückgabe */
     return buffer;
 }
+
+int write_file(const char *filename, const char *content) {
+    FILE *outfile = fopen(filename, "w");
+    if (outfile != NULL)
+    {
+        fputs(content, outfile);
+        fclose(outfile);
+        return EXIT_SUCCESS;
+    } else {
+        perror("Fehler beim Schreiben der Datei: ");
+        return EXIT_FAILURE;
+    }
+}
