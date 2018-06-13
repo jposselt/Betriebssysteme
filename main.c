@@ -31,7 +31,10 @@ int main( int argc, char *argv[] ) {
 
         // Starte Reader Thread
         pthread_t producer;
-        if (pthread_create(&producer, NULL, readerThread, mutexQueue)) {
+        readerThreadArg readerArg;
+        readerArg.directory = dir;
+        readerArg.mutexQueue = mutexQueue;
+        if (pthread_create(&producer, NULL, readerThread, &readerArg)) {
             perror("Fehler beim Starten des Erzeuger-Threads: ");
         }
 

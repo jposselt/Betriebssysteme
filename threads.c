@@ -19,9 +19,13 @@ void deleteJob(Job *job) {
  * @return
  */
 void *readerThread(void *arg) {
-    MutexQueue *mq = (MutexQueue *) arg;
+    readerThreadArg *in = (readerThreadArg *) arg;
+
+    MutexQueue *mq = in->mutexQueue;
 
     printf("Reader thread gestartet.\n");
+
+
 
     return NULL;
 }
