@@ -11,6 +11,7 @@ typedef struct Job {
 
 typedef struct readerThreadArg {
     DIR *directory;
+    char *basename;
     MutexQueue *mutexQueue;
 } readerThreadArg;
 

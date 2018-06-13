@@ -19,8 +19,6 @@ int main( int argc, char *argv[] ) {
     DIR* dir = opendir(argv[1]);
     if (dir)
     {
-        /* Verzeichnis existiert */
-
         // Initialisierung
         MutexQueue *mutexQueue = mutexQueueInit();
         time_t start_t, end_t;
@@ -33,6 +31,7 @@ int main( int argc, char *argv[] ) {
         pthread_t producer;
         readerThreadArg readerArg;
         readerArg.directory = dir;
+        readerArg.basename = argv[1];
         readerArg.mutexQueue = mutexQueue;
         if (pthread_create(&producer, NULL, readerThread, &readerArg)) {
             perror("Fehler beim Starten des Erzeuger-Threads: ");
