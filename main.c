@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <pthread.h>
+
+#include "threads.h"
+
+#define NTHREADS 4
 
 int main( int argc, char *argv[] ) {
 
@@ -16,8 +21,47 @@ int main( int argc, char *argv[] ) {
     {
         /* Verzeichnis existiert */
 
+        // Initialisierung
+        MutexQueue *mutexQueue = mutexQueueInit();
+        time_t start_t, end_t;
+        double diff_t;
+
+        // Starte Zeitmessung
+        time(&start_t);
+
         // Starte Reader Thread
+        pthread_t producer;
+        if (pthread_create(&producer, NULL, readerThread, mutexQueue)) {
+            perror("Fehler beim Starten des Erzeuger-Threads: ");
+        }
+
         // Starte Compression Threads
+        pthread_t consumers[NTHREADS];
+        for (int i = 0; i < NTHREADS; i++) {
+            comprThreadArg *arg = malloc(sizeof(comprThreadArg));
+            arg->id = i+1;
+            arg->mutexQueue = mutexQueue;
+            if (pthread_create(&(consumers[i]), NULL, compressionThread, arg)) {
+                perror("Fehler beim Starten der Verbraucher-Threads: ");
+            }
+        }
+
+        // Warten auf Ende der der Threads
+        pthread_join(producer, NULL);
+        for (int i = 0; i < NTHREADS; i++) {
+            pthread_join(consumers[i], NULL);
+        }
+        printf("Alle Threads beendet.\n");
+
+        // Ende Zeitmessung
+        time(&end_t);
+
+        // Aufräumen
+        Cleanup(mutexQueue);
+
+        // Ausgabe Laufzeit
+        diff_t = difftime(end_t, start_t);
+        printf("Laufzeit = %f\n", diff_t);
 
     }
     else if (ENOENT == errno)
