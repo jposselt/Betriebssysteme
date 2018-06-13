@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include "mutexQueue.h"
 
+/**
+ * Initialisierung der gesicherten Warteschlange
+ * @return Zeiger auf initialisierte Warteschlange
+ */
 MutexQueue *mutexQueueInit(void) {
     MutexQueue *mutexQueue = (MutexQueue *) malloc(sizeof(MutexQueue));
     if (mutexQueue) {
@@ -25,7 +29,7 @@ MutexQueue *mutexQueueInit(void) {
             exit(EXIT_FAILURE);
         }
 
-        /* Bedingungsvariable */
+        /* Bedingungsvariablen */
         mutexQueue->notEmpty = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
         if (mutexQueue->notEmpty) {
             if (pthread_cond_init (mutexQueue->notEmpty, NULL)) {
@@ -38,6 +42,7 @@ MutexQueue *mutexQueueInit(void) {
         }
 
         mutexQueue->empty = 1;
+        mutexQueue->running = 1;
     } else {
         printf("Fehler beim Anlegen der synchronisierten Queue");
         exit(EXIT_FAILURE);
@@ -46,6 +51,10 @@ MutexQueue *mutexQueueInit(void) {
     return mutexQueue;
 }
 
+/**
+ * Löschen der Warteschlange
+ * @param mutexQueue
+ */
 void Cleanup(MutexQueue *mutexQueue) {
     pthread_mutex_destroy (mutexQueue->mutex);
     free (mutexQueue->mutex);

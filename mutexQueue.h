@@ -8,6 +8,7 @@ typedef struct MutexQueue
     pthread_mutex_t *mutex;
     pthread_cond_t *notEmpty;
     int empty;
+    int running;
     Queue queue;
 } MutexQueue;
 
