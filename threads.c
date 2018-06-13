@@ -185,6 +185,10 @@ void *compressionThread(void *arg) {
             mutexQueue->empty = 1;
             if ( !(mutexQueue->running) ) {   // Erzeuger beendet
                 loop = 0;
+                /*
+                 * Queue ist eigentlich leer, aber wir müssen ein letztes
+                 * mal die Wartebedinung überwinden
+                 */
                 mutexQueue->empty = 0;
                 pthread_cond_signal(mutexQueue->notEmpty);
             }
@@ -202,13 +206,13 @@ void *compressionThread(void *arg) {
         // Job vorhanden
         if (job) {
 
-            printf("Compression thread Nr. %d: Bearbeite Job\n", id);
+            printf("Compression thread Nr. %d: Komprimiere %s\n", id, job->path);
 
             // Schreibe komprimierten Inhalt in Datei
             Result *result = compress_string(job->content);
             if (result) {
                 char *name = getCompressedFileName(job->path);
-                //write_file(name, result->data);
+                write_file(name, result->data);
                 free(name);
                 free(result->data);
                 free(result);
