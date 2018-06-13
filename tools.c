@@ -6,14 +6,22 @@
 
 #include "tools.h"
 
-/* Bestimmt die Dateiendung */
+/**
+ * Bestimmt die Dateiendung
+ * @param filename
+ * @return Dateiendung
+ */
 const char *get_filename_ext(const char *filename) {
     const char *dot = strrchr(filename, '.');
     if(!dot || dot == filename) return "";
     return dot + 1;
 }
 
-/*Hilfsfunktion zum Lesen des Dateiinhalts */
+/**
+ * Inhalt der Datei als String
+ * @param filename
+ * @return Dateiinhalt
+ */
 const char *get_file_content(const char *filename) {
     char *buffer = "";
 
@@ -57,6 +65,12 @@ const char *get_file_content(const char *filename) {
     return buffer;
 }
 
+/**
+ * Schriebt eine Datei
+ * @param filename Dateipfad
+ * @param content Zu schreibender Inhalt
+ * @return EXIT_SUCCESS oder EXIT_FAILURE
+ */
 int write_file(const char *filename, const char *content) {
     FILE *outfile = fopen(filename, "w");
     if (outfile != NULL)
