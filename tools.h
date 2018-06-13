@@ -7,6 +7,6 @@
 
 const char *get_filename_ext(const char *filename);
 const char *get_file_content(const char *filename);
-write_file(const char *filename, const char *content);
+int write_file(const char *filename, const char *content);
 
 #endif //SYNCHRONISATION_TOOLS_H
