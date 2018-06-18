@@ -3,4 +3,4 @@ project(Betriebssysteme_07 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(FileTwister main.c)
+add_executable(FileTwister main.c tools.c tools.h)
