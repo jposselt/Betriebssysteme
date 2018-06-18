@@ -105,15 +105,15 @@ void *readerThread(void *arg) {
             }
             mutexQueue->empty = 0;
 
-            // Signal senden
-            if (pthread_cond_signal(mutexQueue->notEmpty)) {
-                perror("Fehler beim Senden eines Signals: ");
-            }
-
             // Sperre lösen
             if (pthread_mutex_unlock(mutexQueue->mutex)) {
                 perror("Fehler beim Entsperren des Mutex: ");
                 return NULL;
+            }
+
+            // Signal senden
+            if (pthread_cond_signal(mutexQueue->notEmpty)) {
+                perror("Fehler beim Senden eines Signals: ");
             }
 
         }
@@ -130,16 +130,18 @@ void *readerThread(void *arg) {
     // Marker, dass Produzent fertig ist
     mutexQueue->running = 0;
 
-    // Signal senden
-    if (pthread_cond_signal(mutexQueue->notEmpty)) {
-        perror("Fehler beim Senden eines Signals: ");
-    }
-
     // Sperre lösen
     if (pthread_mutex_unlock(mutexQueue->mutex)) {
         perror("Fehler beim Entsperren des Mutex: ");
         return NULL;
     }
+
+    // Signal senden
+    if (pthread_cond_signal(mutexQueue->notEmpty)) {
+        perror("Fehler beim Senden eines Signals: ");
+    }
+
+    sleep(1);
 
     printf("Reader thread beendet.\n");
 
@@ -190,11 +192,11 @@ void *compressionThread(void *arg) {
                  * mal die Wartebedinung überwinden
                  */
                 mutexQueue->empty = 0;
-                pthread_cond_signal(mutexQueue->notEmpty);
+                //pthread_cond_signal(mutexQueue->notEmpty);
             }
         } else {                              // Noch Jobs in der Queue
             mutexQueue->empty = 0;
-            pthread_cond_signal(mutexQueue->notEmpty);
+            //pthread_cond_signal(mutexQueue->notEmpty);
         }
 
         // Sperre lösen
@@ -202,6 +204,8 @@ void *compressionThread(void *arg) {
             perror("Fehler beim Entsperren des Mutex: ");
             return NULL;
         }
+
+        pthread_cond_signal(mutexQueue->notEmpty);
 
         // Job vorhanden
         if (job) {
