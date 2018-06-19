@@ -12,7 +12,8 @@ void printOrCopyFile(int src, int dest) {
     if(dest == STDOUT) { // dest = stdout
         printHalfHalf(src);
     } else {        // other dest
-
+        printFile(src, dest);
+        printFile(dest, STDOUT);
     }
 }
 
@@ -38,7 +39,7 @@ int main( int argc, char *argv[] ) {
 
     /* Open output file */
     char *dest = argv[2];
-    int fd_dest = open(dest, O_RDWR|O_CREAT|O_TRUNC);
+    int fd_dest = open(dest, O_RDWR|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
     if(fd_dest < -1) {
         perror("Could not open output file: ");
         return EXIT_FAILURE;

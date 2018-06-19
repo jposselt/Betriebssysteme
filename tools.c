@@ -25,10 +25,10 @@ off_t getFileSize(const int fd) {
 void printHalfHalf(const int fd) {
     char buffer[BUFFER_SIZE];
     long int count;
-    off_t size = getFileSize(fd);
+    long int size = getFileSize(fd);
 
     /* Check size */
-    if(size < (off_t) 0) {
+    if(size < 0) {
         writeError("Could not get input file size\n");
         return;
     }
@@ -45,7 +45,7 @@ void printHalfHalf(const int fd) {
             perror("printHalfHalf: ");
             return;
         }
-        if (write(1, buffer, (size_t)nRead) < 0) {
+        if (write(STDOUT, buffer, (size_t)nRead) < 0) {
             perror("printHalfHalf: ");
             return;
         }
@@ -64,16 +64,50 @@ void printHalfHalf(const int fd) {
             perror("printHalfHalf: ");
             return;
         }
-        if (write(1, buffer, (size_t)nRead) < 0) {
+        if (write(STDOUT, buffer, (size_t)nRead) < 0) {
             perror("printHalfHalf: ");
             return;
         }
         count -= nRead;
     }
 
+    if (write(STDOUT, "\n", 1) < 0 ) {
+        perror("printHalfHalf: ");
+        return;
+    }
+
     /* Rewind */
     if (lseek(fd, 0, SEEK_SET) < (off_t) 0) {
         perror("printHalfHalf: ");
         return;
+    }
+}
+
+void printFile(const int src, const int dest) {
+    char buffer[BUFFER_SIZE];
+    long int count = getFileSize(src);
+
+    /* Check size */
+    if(count < 0) {
+        writeError("Could not get output file size\n");
+        return;
+    }
+
+    while (count > 0) {
+        ssize_t nRead = read(src, buffer, BUFFER_SIZE);
+        if (nRead < 0) {
+            perror("printFile: ");
+            return;
+        }
+        if (write(dest, buffer, (size_t)nRead) < 0) {
+            perror("printFile: ");
+            return;
+        }
+        count -= nRead;
+    }
+
+    /* Rewind file */
+    if(dest > STDERR) {
+        lseek(dest, 0, SEEK_SET);
     }
 }

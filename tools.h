@@ -10,4 +10,6 @@ off_t getFileSize(const int fd);
 
 void printHalfHalf(const int fd);
 
+void printFile(const int src, const int dest);
+
 #endif //BETRIEBSSYSTEME_07_TOOLS_H
