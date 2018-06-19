@@ -5,6 +5,7 @@
 #define STDERR 2
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 void writeError(const char* errorMsg);
 off_t getFileSize(const int fd);

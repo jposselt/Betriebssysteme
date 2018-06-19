@@ -7,7 +7,7 @@
 #include "tools.h"
 
 #define BUFFER_SIZE 2
-#define NCOPY 10
+#define COPY_BYTES 10
 
 /* Write an error message to stderr */
 void writeError(const char* errorMsg) {
@@ -112,28 +112,49 @@ void printFile(const int src, const int dest) {
         count -= nRead;
     }
 
-    /* Rewind file */
-    if(dest > STDERR) {
+    /* Rewind files */
+    if (dest > STDERR) {
         lseek(dest, 0, SEEK_SET);
     }
+    if (src > STDERR) {
+        lseek(src, 0, SEEK_SET);
+    }
+
 }
 
 
 void fileInsert(const int src, const int dest) {
-    long int insertPosition;
     long int size = getFileSize(src);
-    long int bytesToMove = size - NCOPY;
+    long int bytesToMove = MAX(size - COPY_BYTES, 0);
+    long int insertPosition = MIN( MAX(size - 1, 0), COPY_BYTES);
 
-    char insertBuffer[NCOPY];
-    if (read(src, insertBuffer, NCOPY) < 0) {
+    char insertBuffer[COPY_BYTES];
+
+    ssize_t actualCopy = read(src, insertBuffer, (size_t) MIN(COPY_BYTES, size));
+    if (actualCopy < 0) {
         perror("fileInsert: ");
         return;
     }
 
-//    if (size < (NCOPY + 1)) {
-//
-//    } else {
-//        insertPosition = NCOPY + 1;
-//        char moveBuffer[BUFFER_SIZE];
-//    }
+    if (bytesToMove == 0) {
+        if (lseek(dest, insertPosition, SEEK_SET) < 0) {
+            perror("fileInsert: ");
+            return;
+        }
+        if (write(dest, insertBuffer, (size_t) actualCopy) < 0) {
+            perror("fileInsert: ");
+            return;
+        }
+    } else {
+        insertPosition = COPY_BYTES + 1;
+        char moveBuffer[BUFFER_SIZE];
+    }
+
+    /* Rewind files */
+    if (dest > STDERR) {
+        lseek(dest, 0, SEEK_SET);
+    }
+    if (src > STDERR) {
+        lseek(src, 0, SEEK_SET);
+    }
 }
