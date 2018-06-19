@@ -7,12 +7,15 @@
 #include "tools.h"
 
 #define BUFFER_SIZE 2
+#define NCOPY 10
 
+/* Write an error message to stderr */
 void writeError(const char* errorMsg) {
     const char *error = errorMsg;
     write(STDERR, error, strlen(error));
 }
 
+/* Get the size of a file in bytes */
 off_t getFileSize(const int fd) {
     struct stat fileStat;
     if(fstat(fd,&fileStat) < 0) {
@@ -22,6 +25,7 @@ off_t getFileSize(const int fd) {
     }
 }
 
+/* Print second then first half of file to stdout */
 void printHalfHalf(const int fd) {
     char buffer[BUFFER_SIZE];
     long int count;
@@ -83,6 +87,7 @@ void printHalfHalf(const int fd) {
     }
 }
 
+/* Print file to another file descriptor */
 void printFile(const int src, const int dest) {
     char buffer[BUFFER_SIZE];
     long int count = getFileSize(src);
@@ -93,6 +98,7 @@ void printFile(const int src, const int dest) {
         return;
     }
 
+    /* Read file pice by pice and write pices to stdout */
     while (count > 0) {
         ssize_t nRead = read(src, buffer, BUFFER_SIZE);
         if (nRead < 0) {
@@ -109,5 +115,15 @@ void printFile(const int src, const int dest) {
     /* Rewind file */
     if(dest > STDERR) {
         lseek(dest, 0, SEEK_SET);
+    }
+}
+
+
+void fileInsert(const int src, const int dest) {
+    long int size = getFileSize(src);
+    if (size < (NCOPY + 1)) {
+
+    } else {
+
     }
 }
