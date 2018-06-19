@@ -140,6 +140,7 @@ void fileInsert(const int src, const int dest) {
         return;
     }
 
+    /* Insert */
     if (bytesToMove == 0) {
         if (lseek(dest, insertPosition, SEEK_SET) < 0) {
             perror("fileInsert: ");
@@ -150,7 +151,58 @@ void fileInsert(const int src, const int dest) {
             return;
         }
     } else {
+        /* Move end bytes */
         char moveBuffer[BUFFER_SIZE];
+        while (bytesToMove > 0) {
+            /* Calculate and set the position from there to read */
+            long int readPosition = insertPosition + bytesToMove - MIN(BUFFER_SIZE, bytesToMove);
+            if (lseek(dest, readPosition, SEEK_SET) < 0) {
+                writeError("fileInsert: Could not set destination read position\n");
+                perror("fileInsert: ");
+                return;
+            }
+            ssize_t movingBytes = read(dest, moveBuffer, (size_t) MIN(BUFFER_SIZE, bytesToMove));
+            if( movingBytes < 0 ) {
+                writeError("fileInsert: Could not read bytes for moving\n");
+                perror("fileInsert: ");
+                return;
+            }
+
+            /* Write the bytes to their new position */
+            long int writePosition = readPosition + COPY_BYTES;
+            if (lseek(dest, writePosition, SEEK_SET) < 0) {
+                writeError("fileInsert: Could not set destination write position\n");
+                perror("fileInsert: ");
+                return;
+            }
+            long int bytesToWrite = movingBytes;
+            while (bytesToWrite > 0) {
+                ssize_t actualWritten = write(dest, moveBuffer, (size_t) bytesToWrite);
+                if (actualWritten < 0) {
+                    writeError("fileInsert: Could not write bytes for moving\n");
+                    perror("fileInsert: ");
+                    return;
+                }
+                bytesToWrite -= actualWritten;
+            }
+            bytesToMove -= movingBytes;
+        }
+
+        /* Insert new bytes */
+        if (lseek(dest, insertPosition, SEEK_SET) < 0) {
+            writeError("fileInsert: Could not set destination write position\n");
+            perror("fileInsert: ");
+            return;
+        }
+        while(actualCopy) {
+            ssize_t actualWritten = write(dest, insertBuffer, (size_t) actualCopy);
+            if (actualWritten < 0) {
+                writeError("fileInsert: Could not write bytes for inserting\n");
+                perror("fileInsert: ");
+                return;
+            }
+            actualCopy -= actualWritten;
+        }
     }
 
     /* Rewind files */

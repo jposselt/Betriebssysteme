@@ -13,6 +13,7 @@ void printOrCopyFile(int src, int dest) {
         printHalfHalf(src);
     } else {        // other dest
         printFile(src, dest);
+        fileInsert(src, dest);
         printFile(dest, STDOUT);
     }
 }
