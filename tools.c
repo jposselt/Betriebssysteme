@@ -6,6 +6,8 @@
 
 #include "tools.h"
 
+#define BUFFER_SIZE 2
+
 void writeError(const char* errorMsg) {
     const char *error = errorMsg;
     write(2, error, strlen(error));
@@ -21,10 +23,11 @@ off_t getFileSize(const int fd) {
 }
 
 void printHalfHalf(const int fd) {
-    char *buffer;
+    char buffer[BUFFER_SIZE];
+    long int count;
     off_t size = getFileSize(fd);
 
-    /* Check size*/
+    /* Check size */
     if(size < (off_t) 0) {
         writeError("Could not get input file size\n");
         return;
@@ -35,38 +38,38 @@ void printHalfHalf(const int fd) {
         perror("printHalfHalf: ");
         return;
     }
-    if ( (buffer = malloc(size - size/2)) == NULL ) {
-        writeError("printHalfHalf: Could not allocate memory");
-        return;
+    count = size - size/2;
+    while (count > 0) {
+        ssize_t nRead = read(fd, buffer, BUFFER_SIZE);
+        if (nRead < 0) {
+            perror("printHalfHalf: ");
+            return;
+        }
+        if (write(1, buffer, (size_t)nRead) < 0) {
+            perror("printHalfHalf: ");
+            return;
+        }
+        count -= nRead;
     }
-    if ( read(fd, buffer, size - size/2) < 0 ) {
-        perror("printHalfHalf: ");
-        return;
-    }
-    if(write(1, buffer, size - size/2) < 0) {
-        perror("printHalfHalf: ");
-        return;
-    }
-    free(buffer);
 
     /* Print first half */
     if (lseek(fd, 0, SEEK_SET) < (off_t) 0) {
         perror("printHalfHalf: ");
         return;
     }
-    if ( (buffer = malloc(size/2)) == NULL ) {
-        writeError("printHalfHalf: Could not allocate memory");
-        return;
+    count = size/2;
+    while (count > 0) {
+        ssize_t nRead = read(fd, buffer, BUFFER_SIZE);
+        if (nRead < 0) {
+            perror("printHalfHalf: ");
+            return;
+        }
+        if (write(1, buffer, (size_t)nRead) < 0) {
+            perror("printHalfHalf: ");
+            return;
+        }
+        count -= nRead;
     }
-    if ( read(fd, buffer, size/2) < 0 ) {
-        perror("printHalfHalf: ");
-        return;
-    }
-    if(write(1, buffer, size/2) < 0) {
-        perror("printHalfHalf: ");
-        return;
-    }
-    free(buffer);
 
     /* Rewind */
     lseek(fd, 0, SEEK_SET);
