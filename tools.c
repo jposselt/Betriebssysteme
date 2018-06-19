@@ -128,8 +128,12 @@ void fileInsert(const int src, const int dest) {
     long int bytesToMove = MAX(size - COPY_BYTES, 0);
     long int insertPosition = MIN( MAX(size - 1, 0), COPY_BYTES);
 
+    /* Get last COPY_BYTES characters from src */
     char insertBuffer[COPY_BYTES];
-
+    if(lseek(src, MAX(size - COPY_BYTES -1,0), SEEK_SET) < 0) {
+        perror("fileInsert: ");
+        return;
+    }
     ssize_t actualCopy = read(src, insertBuffer, (size_t) MIN(COPY_BYTES, size));
     if (actualCopy < 0) {
         perror("fileInsert: ");
@@ -146,7 +150,6 @@ void fileInsert(const int src, const int dest) {
             return;
         }
     } else {
-        insertPosition = COPY_BYTES + 1;
         char moveBuffer[BUFFER_SIZE];
     }
 
