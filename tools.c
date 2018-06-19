@@ -10,7 +10,7 @@
 
 void writeError(const char* errorMsg) {
     const char *error = errorMsg;
-    write(2, error, strlen(error));
+    write(STDERR, error, strlen(error));
 }
 
 off_t getFileSize(const int fd) {
@@ -72,5 +72,8 @@ void printHalfHalf(const int fd) {
     }
 
     /* Rewind */
-    lseek(fd, 0, SEEK_SET);
+    if (lseek(fd, 0, SEEK_SET) < (off_t) 0) {
+        perror("printHalfHalf: ");
+        return;
+    }
 }

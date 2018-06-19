@@ -8,8 +8,8 @@
 
 #include "tools.h"
 
-void printCopyFile(int src, int dest) {
-    if(dest == 1) { // dest = stdout
+void printOrCopyFile(int src, int dest) {
+    if(dest == STDOUT) { // dest = stdout
         printHalfHalf(src);
     } else {        // other dest
 
@@ -34,11 +34,23 @@ int main( int argc, char *argv[] ) {
         return EXIT_FAILURE;
     }
 
+    printOrCopyFile(fd_src, 1);
 
-    printCopyFile(fd_src, 1);
+    /* Open output file */
+    char *dest = argv[2];
+    int fd_dest = open(dest, O_RDWR|O_CREAT|O_TRUNC);
+    if(fd_dest < -1) {
+        perror("Could not open output file: ");
+        return EXIT_FAILURE;
+    }
 
+    printOrCopyFile(fd_src, fd_dest);
 
-    //char *dest = argv[2];
+    /* Close output file */
+    if(close(fd_dest)) {
+        perror("Could not close output file: ");
+        return EXIT_FAILURE;
+    }
 
     /* Close input file */
     if(close(fd_src)) {
