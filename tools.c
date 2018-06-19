@@ -44,7 +44,7 @@ void printHalfHalf(const int fd) {
     }
     count = size - size/2;
     while (count > 0) {
-        ssize_t nRead = read(fd, buffer, BUFFER_SIZE);
+        ssize_t nRead = read(fd, buffer, (size_t) MIN(BUFFER_SIZE, count));
         if (nRead < 0) {
             perror("printHalfHalf: ");
             return;
@@ -63,7 +63,7 @@ void printHalfHalf(const int fd) {
     }
     count = size/2;
     while (count > 0) {
-        ssize_t nRead = read(fd, buffer, BUFFER_SIZE);
+        ssize_t nRead = read(fd, buffer, (size_t) MIN(BUFFER_SIZE, count));
         if (nRead < 0) {
             perror("printHalfHalf: ");
             return;
@@ -120,10 +120,20 @@ void printFile(const int src, const int dest) {
 
 
 void fileInsert(const int src, const int dest) {
+    long int insertPosition;
     long int size = getFileSize(src);
-    if (size < (NCOPY + 1)) {
+    long int bytesToMove = size - NCOPY;
 
-    } else {
-
+    char insertBuffer[NCOPY];
+    if (read(src, insertBuffer, NCOPY) < 0) {
+        perror("fileInsert: ");
+        return;
     }
+
+//    if (size < (NCOPY + 1)) {
+//
+//    } else {
+//        insertPosition = NCOPY + 1;
+//        char moveBuffer[BUFFER_SIZE];
+//    }
 }
